@@ -5,12 +5,13 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Controllers\AuthController;
-
-// Route::get(
-//     '/user', function (Request $request) {
-//         return $request->user();
-//     }
-// )->middleware('auth:sanctum');
-
+use App\Http\Controllers\DeviceController;
 
 Route::post('login', [ AuthController::class, 'postLogin' ])->middleware('api');
+
+Route::middleware('auth:sanctum')->group(
+    function () {
+        // Rotas de Auth
+        Route::get('device', [ DeviceController::class, 'getDevices' ]);
+    }
+);

@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,9 +12,23 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware) {
-        //
-    })
-    ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+    ->withMiddleware(
+        function (Middleware $middleware) {
+            $middleware->statefulApi();
+        }
+    )
+    ->withExceptions(
+        function (Exceptions $exceptions) {
+            $exceptions->render(
+                function (AuthenticationException $e, $request) {
+                    if ($request->is('api/*')) {
+                        return response()->json(
+                            [
+                            'description' => 'As credenciais fornecidas pelo usuário são inexistentes ou inválidas'
+                            ], 401
+                        );
+                    }
+                }
+            );
+        }
+    )->create();
