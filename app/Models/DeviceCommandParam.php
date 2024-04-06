@@ -18,8 +18,11 @@ class DeviceCommandParam extends Model
         'id',
         'name',
         'description',
-        'possible_values',
-        'expected_behavior',
         'device_command_id'
     ];
+
+    public function deviceCommand()
+    {
+        return $this->belongsTo(DeviceCommand::class);
+    }
 }

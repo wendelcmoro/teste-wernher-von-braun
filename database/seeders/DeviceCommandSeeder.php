@@ -19,6 +19,10 @@ class DeviceCommandSeeder extends Seeder
         DB::table('device_commands')->insert(
             [
             'command' => 'teste comando',
+            'operation' => 'teste comando',
+            'description' => 'teste comando',
+            'result' => 'teste comando',
+            'format' => 'teste comando',
             'device_id' => 1,
             ]
         );

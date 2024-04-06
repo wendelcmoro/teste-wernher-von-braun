@@ -24,7 +24,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                'msg'   => 'Missings fields',
+                'msg'   => 'Erros de validação',
                 'erros' => $validator->errors()
                 ],
                 500
@@ -37,7 +37,6 @@ class AuthController extends Controller
         if ($user) {
             return response()->json(
                 [
-                'success' => true,
                 'user' => $user,
                 'auth_token'   => $user->createToken($user->id)->plainTextToken
                 ],
@@ -47,7 +46,6 @@ class AuthController extends Controller
 
         return response()->json(
             [
-            'success' => false,
             'message' => 'User not found'
             ],
             401

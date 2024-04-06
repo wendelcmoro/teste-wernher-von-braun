@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create(
             'devices', function (Blueprint $table) {
                 $table->id();
+                $table->string('identifier');
                 $table->string('name');
                 $table->string('description');
                 $table->string('manufacturer');
                 $table->string('access_url');
                 $table->timestamps();
+                $table->index(['identifier']);
             }
         );
     }

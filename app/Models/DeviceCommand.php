@@ -17,6 +17,20 @@ class DeviceCommand extends Model
     protected $fillable = [
         'id',
         'command',
+        'operation',
+        'description',
+        'result',
+        'format',
         'device_id'
     ];
+
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
+    
+    public function deviceCommandParams()
+    {
+        return $this->hasMany(DeviceCommandParam::class);
+    }
 }

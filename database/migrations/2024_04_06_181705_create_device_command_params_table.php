@@ -15,8 +15,7 @@ return new class extends Migration
             'device_command_params', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
-                $table->string('possible_values');
-                $table->string('expected_behavior');
+                $table->string('description');
                 $table->bigInteger('device_command_id')->unsigned();
                 $table->foreign('device_command_id')->references('id')->on('device_commands')->onDelete('cascade');
                 $table->timestamps();

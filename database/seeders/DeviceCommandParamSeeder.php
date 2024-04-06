@@ -19,8 +19,7 @@ class DeviceCommandParamSeeder extends Seeder
         DB::table('device_command_params')->insert(
             [
             'name' => 'teste',
-            'possible_values' => 'teste',
-            'expected_behavior' => 'teste',
+            'description' => 'teste',
             'device_command_id' => 1,
             ]
         );

@@ -15,6 +15,10 @@ return new class extends Migration
             'device_commands', function (Blueprint $table) {
                 $table->id();
                 $table->string('command');
+                $table->string('operation');
+                $table->string('description');
+                $table->string('result');
+                $table->string('format');
                 $table->bigInteger('device_id')->unsigned();
                 $table->foreign('device_id')->references('id')->on('devices')->onDelete('cascade');
                 $table->timestamps();

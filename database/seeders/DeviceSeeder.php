@@ -18,6 +18,7 @@ class DeviceSeeder extends Seeder
 
         DB::table('devices')->insert(
             [
+            'identifier'=> '123',
             'name' => 'teste device',
             'description' => 'Teste de dispositivo, descrito por ....',
             'Manufacturer' => 'Desconhecido',

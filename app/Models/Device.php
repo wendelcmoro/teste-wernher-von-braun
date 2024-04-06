@@ -20,4 +20,9 @@ class Device extends Model
         'manufacturer',
         'access_url',
     ];
+
+    public function deviceCommands()
+    {
+        return $this->hasMany(DeviceCommand::class);
+    }
 }

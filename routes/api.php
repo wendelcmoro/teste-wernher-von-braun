@@ -11,7 +11,9 @@ Route::post('login', [ AuthController::class, 'postLogin' ])->middleware('api');
 
 Route::middleware('auth:sanctum')->group(
     function () {
-        // Rotas de Auth
-        Route::get('device', [ DeviceController::class, 'getDevices' ]);
+        Route::get('device/{id?}', [ DeviceController::class, 'getDevices' ]);
+        Route::post('device', [ DeviceController::class, 'storeDevice' ]);
+        Route::put('device', [ DeviceController::class, 'storeDevice' ]);
+        Route::delete('device', [ DeviceController::class, 'deleteDevice' ]);
     }
 );

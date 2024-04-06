@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DeviceSeeder::class,
             DeviceCommandSeeder::class,
-            DeviceCommandDescriptionSeeder::class,
             DeviceCommandParamSeeder::class
             ]
         );
