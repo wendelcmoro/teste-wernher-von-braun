@@ -13,9 +13,16 @@ use App\Models\Device;
 class DeviceController extends Controller
 {
     public function getDevices($identifier = null)
-    {
+    {   
         if ($identifier) {
-            $device = Device::where('identifier', $identifier)->with('deviceCommands.deviceCommandParams')->first();
+            $device = Device::where('identifier', $identifier)
+                ->with('deviceCommands.deviceCommandParams')
+                ->where('manufacturer', 'PredictWeater')
+                ->whereHas(
+                    'deviceCommands', function ($query) {
+                            $query->where('command', 'get_rainfall_intensity');
+                    }
+                )->first();
 
             if ($device) {
                 return response()->json(
@@ -34,15 +41,58 @@ class DeviceController extends Controller
             );
         }
 
-        $devices = Device::with('deviceCommands.deviceCommandParams')->get();
+        $devices = Device::with('deviceCommands.deviceCommandParams')
+            ->where('manufacturer', 'PredictWeater')
+            ->whereHas(
+                'deviceCommands', function ($query) {
+                    $query->where('command', 'get_rainfall_intensity');
+                }
+            )->get();
+        
+        // Realiza a requisição telnet para o dispositivo
+        // utilizando o comando 'rainfall_intensity'
+        foreach ($devices as $device) {
+            // Define as informações de conexão Telnet
+            $host = $device->access_url;
+            $port = 12000;
+
+            // Abre uma conexão Telnet
+            $socket = fsockopen($host, $port, $errno, $errstr, 10);
+
+            if (!$socket) {
+                return response()->json(
+                    [
+                        'description' => "Erro ao conectar ao dispositivo. Telnet: $errstr ($errno)",
+                    ],
+                    500
+                ); 
+            }
+
+            // Envia o comando Telnet para obter a intensidade da chuva
+            $command = $device->deviceCommands[0]->command;
+            fwrite($socket, $command);
+
+            // Lê a resposta do servidor Telnet
+            $response = '';
+            while (!feof($socket)) {
+                $response .= fgets($socket, 128);
+            }
+
+            // Fecha a conexão Telnet
+            fclose($socket);
+            
+            // Para cada dispositivo, inclui um campo com a densidade da chuva daquele dispositivo
+            $device->rainfall_intensity = $response;
+        }
 
         return response()->json(
             [
             'devices' => $devices,
             ],
             200
-        );        
-    }
+        );   
+    }     
+        
 
     public function storeDevice(Request $request)
     {
@@ -67,8 +117,18 @@ class DeviceController extends Controller
             );
         }
 
+        if ($request->manufacturer != 'PredictWeater') {
+            return response()->json(
+                [
+                'description' => 'A solicitação não foi realizada pelo proprietário do dispositivo',
+                ],
+                404
+            );            
+        }
+
+        $device = null;
         if ($request->isMethod('put')) {
-            $device = Device::find($request->identifier);
+            $device = Device::where('identifier', $request->identifier)->first();
             if (!$device) {
                 return response()->json(
                     [
@@ -76,6 +136,15 @@ class DeviceController extends Controller
                     ],
                     404
                 );
+            }
+
+            if ($device->manufacturer != 'PredictWeater') {
+                return response()->json(
+                    [
+                    'description' => 'A solicitação não foi realizada pelo proprietário do dispositivo',
+                    ],
+                    401
+                ); 
             }
         }
         else {
@@ -127,16 +196,23 @@ class DeviceController extends Controller
             );
         }
 
-        $device = Device::find($request->identifier);
+        $device = Device::where('identifier', $request->identifier);
         if (!$device) {
-            if (!$device) {
-                return response()->json(
-                    [
-                    'description' => 'Dispositivo não encontrado',
-                    ],
-                    404
-                );
-            }
+            return response()->json(
+                [
+                'description' => 'Dispositivo não encontrado',
+                ],
+                404
+            );
+        }
+
+        if ($device->manufacturer != 'PredictWeater') {
+            return response()->json(
+                [
+                'description' => 'A solicitação não foi realizada pelo proprietário do dispositivo',
+                ],
+                401
+            ); 
         }
 
         $device->delete();

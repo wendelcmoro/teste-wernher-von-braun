@@ -19,10 +19,10 @@ class DeviceSeeder extends Seeder
         DB::table('devices')->insert(
             [
             'identifier'=> '123',
-            'name' => 'teste device',
-            'description' => 'Teste de dispositivo, descrito por ....',
-            'Manufacturer' => 'Desconhecido',
-            'access_url' => 'http://localhost:8000/',
+            'name' => 'Teste predictWeater',
+            'description' => 'Teste predictWeater',
+            'Manufacturer' => 'PredictWeater',
+            'access_url' => '127.0.0.1',
             ]
         );
     }

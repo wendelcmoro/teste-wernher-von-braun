@@ -18,11 +18,11 @@ class DeviceCommandSeeder extends Seeder
 
         DB::table('device_commands')->insert(
             [
-            'command' => 'teste comando',
-            'operation' => 'teste comando',
-            'description' => 'teste comando',
-            'result' => 'teste comando',
-            'format' => 'teste comando',
+            'command' => 'get_rainfall_intensity',
+            'operation' => 'get_rainfall_intensity',
+            'description' => 'Mede a densidade de chuva',
+            'result' => 'Densidade da chuva',
+            'format' => 'Application/Json',
             'device_id' => 1,
             ]
         );
