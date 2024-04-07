@@ -21,8 +21,8 @@ class DeviceCommandSeeder extends Seeder
             'command' => 'get_rainfall_intensity',
             'operation' => 'get_rainfall_intensity',
             'description' => 'Mede a densidade de chuva',
-            'result' => 'Densidade da chuva',
-            'format' => 'Application/Json',
+            'result' => 'Uma mensagem indicando o volume de chuvas, por ex: "A intensidade da chuva é 10 mm/h\r\n"',
+            'format' => 'Texto simples',
             'device_id' => 1,
             ]
         );
